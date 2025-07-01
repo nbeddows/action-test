@@ -1,10 +1,8 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push or pull request events but only for the "main" and "development" branches
   push:
     branches: [ "main", "development" ]
   pull_request:
@@ -26,14 +24,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
+      # Setup additional project requireoments
       - name: Install and setup Conan
         uses: conan-io/setup-conan@v1
         with: 
           config_urls: https://github.com/nbeddows/action-test.git
           cache_packages: true
+      - name: Install Doxygen
+        uses: ssciwr/doxygen-install@v1
+      - name: Install CppCheck
+        run: sudo apt-get install cppcheck
 
-      # Runs a set of commands using the runners shell
+      # Build the project and create the package
       - name: Install Conan profiles
         run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
       - name: Install dependencies
@@ -58,14 +60,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
+      # Setup additional project requireoments
       - name: Install and setup Conan
         uses: conan-io/setup-conan@v1
         with: 
           config_urls: https://github.com/nbeddows/action-test.git
           cache_packages: true
+      - name: Install Doxygen
+        uses: ssciwr/doxygen-install@v1
+      - name: Install CppCheck
+        run: sudo apt-get install cppcheck
 
-      # Runs a set of commands using the runners shell
+      # Build the project and create the package
       - name: Install Conan profiles
         run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
       - name: Install dependencies
@@ -90,14 +96,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
+      # Setup additional project requireoments
       - name: Install and setup Conan
         uses: conan-io/setup-conan@v1
         with:
           config_urls: https://github.com/nbeddows/action-test.git
           cache_packages: true
+      - name: Install Doxygen
+        uses: ssciwr/doxygen-install@v1
+      - name: Install Cppcheck
+        shell: bash
+        run: |
+          curl -KLSs https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi
+          msiexec -i cppcheck-2.17.1-x64-Setup.msi /qn /norestart
+          rm cppcheck-2.17.1-x64-Setup.msi
 
-      # Runs a set of commands using the runners shell
+      # Build the project and create the package
       - name: Install Conan profiles
         run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
       - name: Install dependencies
