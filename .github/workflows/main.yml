@@ -6,9 +6,9 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: [ "main", "development" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "development" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,7 +30,7 @@ jobs:
       - name: Install and setup Conan
         uses: conan-io/setup-conan@v1
         with: 
-          config_urls: https://github.com/nbeddows/meen.git
+          config_urls: https://github.com/nbeddows/action-test.git
           cache_packages: true
 
       # Runs a set of commands using the runners shell
