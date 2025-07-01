@@ -107,7 +107,7 @@ jobs:
       - name: Install Cppcheck
         shell: bash
         run: |
-          curl -KLSs https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi
+          curl -O https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi
           msiexec -i cppcheck-2.17.1-x64-Setup.msi /qn /norestart
           rm cppcheck-2.17.1-x64-Setup.msi
 
