@@ -45,7 +45,7 @@ namespace action::tests
 
 	TEST_F(ActionGTest, Version)
 	{
-		EXPECT_STREQ("v0.0.2", Version());
+		EXPECT_STREQ("v0.0.1", Version());
 	}
 }
 
