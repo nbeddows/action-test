@@ -9,6 +9,8 @@ on:
     branches: [ "main", "development" ]
   pull_request:
     branches: [ "main", "development" ]
+  release::
+    types: [created]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -110,3 +112,10 @@ jobs:
         run: artifacts/Release/x86_64/bin/action_test
       - name: Build package
         run: cmake --build --preset conan-release --target=package
+
+      - name: Upload artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: action-*.tar.gz
