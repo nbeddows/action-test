@@ -9,8 +9,6 @@ on:
     branches: [ "main", "development" ]
   pull_request:
     branches: [ "main", "development" ]
-  release:
-    types: [created]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,9 +35,9 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Install Conan profiles
-        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.1.0"
+        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
       - name: Install dependencies
-        run: conan install . --build=missing --profile:all=Linux-x86_64-gcc-13-gtest
+        run: conan install . --build=missing --profile:all=Linux-x86_64-gcc-14-gtest
       - name: CMake presets
         run: cmake --preset conan-release
       - name: CMake build
@@ -69,9 +67,9 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Install Conan profiles
-        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.1.0"
+        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
       - name: Install dependencies
-        run: conan install . --build=missing --profile:all=Linux-armv8-gcc-13-gtest
+        run: conan install . --build=missing --profile:all=Linux-armv8-gcc-14-gtest
       - name: CMake presets
         run: cmake --preset conan-release
       - name: CMake build
@@ -95,13 +93,13 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install and setup Conan
         uses: conan-io/setup-conan@v1
-        with: 
+        with:
           config_urls: https://github.com/nbeddows/action-test.git
           cache_packages: true
 
       # Runs a set of commands using the runners shell
       - name: Install Conan profiles
-        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.1.0"
+        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
       - name: Install dependencies
         run: conan install . --build=missing --profile:all=Windows-x86_64-msvc-193-gtest
       - name: CMake presets
@@ -112,10 +110,3 @@ jobs:
         run: artifacts/Release/x86_64/bin/action_test
       - name: Build package
         run: cmake --build --preset conan-release --target=package
-
-      - name: Upload artifacts
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: action-*.tar.gz
