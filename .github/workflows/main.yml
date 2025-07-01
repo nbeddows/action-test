@@ -43,6 +43,34 @@ jobs:
           artifacts/Release/x86_64/bin/action_test
           cmake --build --preset conan-release --target=package
 
+  # Build the Linux arm64 distribution
+  linux_arm64_build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04-arm
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Install and setup Conan
+        uses: conan-io/setup-conan@v1
+        with: 
+          config_urls: https://github.com/nbeddows/action-test.git
+          cache_packages: true
+
+      # Runs a set of commands using the runners shell
+      - name: Build and run
+        run: |
+          conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.1.0"
+          conan install . --build=missing --profile:all=Linux-armv8-gcc-13-gtest
+          cmake --preset conan-release
+          cmake --build --preset conan-release
+          artifacts/Release/armv8/bin/action_test
+          cmake --build --preset conan-release --target=package
+
   # Build the Windows x86_64 distribution
   windows_x86_64_build:
     # The type of runner that the job will run on
