@@ -90,11 +90,15 @@ jobs:
           cache_packages: true
 
       # Runs a set of commands using the runners shell
-      - name: Build and run
-        run: |
-          conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.1.0"
-          conan install . --build=missing --profile:all=Windows-x86_64-msvc-193-gtest
-          cmake --preset conan-default
-          cmake --build --preset conan-release
-          artifacts/Release/x86_64/bin/action_test
-          cmake --build --preset conan-release --target=package
+      - name: Install Conan profiles
+        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.1.0"
+      - name: Install dependencies
+        run: conan install . --build=missing --profile:all=Windows-x86_64-msvc-193-gtest
+      - name: CMake presets
+        run: cmake --preset conan-default
+      - name: CMake build
+        run: cmake --build --preset conan-release
+      - name: Run unit tests
+        run: artifacts/Release/x86_64/bin/action_test
+      - name: Build package
+        run: cmake --build --preset conan-release --target=package
