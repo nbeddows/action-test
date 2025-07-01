@@ -9,7 +9,7 @@ on:
     branches: [ "main", "development" ]
   pull_request:
     branches: [ "main", "development" ]
-  release::
+  release:
     types: [created]
 
   # Allows you to run this workflow manually from the Actions tab
