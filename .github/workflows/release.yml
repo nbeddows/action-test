@@ -5,10 +5,12 @@ on:
   # Triggers the workflow when a release is created
   release:
     types: [created]
-name: Handle Release
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 jobs:
-  generate:
-    name: Create release artifacts
+  generate_artifacts:
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
