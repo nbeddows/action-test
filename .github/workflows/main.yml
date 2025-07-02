@@ -13,8 +13,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # Define a strategy for all supported platforms
-  action_matrix:
+  # Test on each supported OS version
+  build_and_execute:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm]
@@ -24,8 +24,6 @@ jobs:
           - os: ubuntu-24.04-arm
             arch: armv8
 
-  # Test on each supported OS version
-  build_and_execute:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
 
