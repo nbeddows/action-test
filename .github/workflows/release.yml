@@ -3,9 +3,9 @@ name: Package Artifacts
 # Controls when the workflow will run
 on:
   # Triggers the workflow when a release is created
-  release::
+  release:
     types: [created]
-name: Package release
+name: Handle Release
 jobs:
   generate:
     name: Create release artifacts
@@ -28,8 +28,6 @@ jobs:
           sudo apt-get install texlive-latex-base
           sudo apt-get install texlive-latex-extra
           sudo apt-get install texlive-font-utils
-      - name: Install CppCheck
-        run: sudo apt-get install cppcheck
 
       # Build the project and create the package
       - name: Install Conan profiles
@@ -40,8 +38,6 @@ jobs:
         run: cmake --preset conan-release
       - name: CMake build
         run: cmake --build --preset conan-release
-#      - name: Run unit tests
-#        run: artifacts/Release/x86_64/bin/action_test
       - name: Build package
         run: cmake --build --preset conan-release --target=package
 
