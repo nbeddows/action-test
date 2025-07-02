@@ -1,0 +1,54 @@
+name: Package Artifacts
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow when a release is created
+  release::
+    types: [created]
+name: Package release
+jobs:
+  generate:
+    name: Create release artifacts
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup additional project requirements
+      - name: Install and setup Conan
+        uses: conan-io/setup-conan@v1
+        with: 
+          config_urls: https://github.com/nbeddows/action-test.git
+          cache_packages: true
+      - name: Install Doxygen
+        uses: ssciwr/doxygen-install@v1
+      - name: Install TeX Live
+        run: |
+          sudo apt-get install texlive-latex-base
+          sudo apt-get install texlive-latex-extra
+          sudo apt-get install texlive-font-utils
+      - name: Install CppCheck
+        run: sudo apt-get install cppcheck
+
+      # Build the project and create the package
+      - name: Install Conan profiles
+        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
+      - name: Install dependencies
+        run: conan install . --build=missing --profile:all=Linux-x86_64-gcc-14-gtest
+      - name: CMake presets
+        run: cmake --preset conan-release
+      - name: CMake build
+        run: cmake --build --preset conan-release
+#      - name: Run unit tests
+#        run: artifacts/Release/x86_64/bin/action_test
+      - name: Build package
+        run: cmake --build --preset conan-release --target=package
+
+      # Upload the package
+      - name: Upload artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: action-*.tar.gz
