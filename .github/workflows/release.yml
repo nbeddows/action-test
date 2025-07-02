@@ -49,4 +49,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: action-*.tar.gz
+          args: ${GITHUB_WORKSPACE}/build/Release/action-*.tar.gz
