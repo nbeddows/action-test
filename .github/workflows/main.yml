@@ -24,38 +24,38 @@ jobs:
           - os: ubuntu-24.04-arm
             arch: armv8
 
-    # Test on each supported OS version
-    build_and_execute:
-      # The type of runner that the job will run on
-      runs-on: ${{ matrix.os }}
+  # Test on each supported OS version
+  build_and_execute:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
 
-      # Steps represent a sequence of tasks that will be executed as part of the job
-      steps:
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        - name: Checkout code
-          uses: actions/checkout@v4
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        # Setup additional project requirements
-        - name: Install and setup Conan
-          uses: conan-io/setup-conan@v1
-          with: 
-            config_urls: https://github.com/nbeddows/action-test.git
-            cache_packages: true
-        - name: Install CppCheck
-          run: sudo apt-get install cppcheck
-        - name: Run CppCheck
-          run: cppcheck -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
-        # Build the project and create the package
-        - name: Install Conan profiles
-          run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
-        - name: Install dependencies
-          run: conan install . --build=missing --profile:all=Linux-${{ matrix.arch }}-gcc-14-gtest
-        - name: CMake presets
-          run: cmake --preset conan-release
-        - name: CMake build
-          run: cmake --build --preset conan-release
-        - name: Run unit tests
-          run: artifacts/Release/${{ matrix.arch }}/bin/action_test
+      # Setup additional project requirements
+      - name: Install and setup Conan
+        uses: conan-io/setup-conan@v1
+        with: 
+          config_urls: https://github.com/nbeddows/action-test.git
+          cache_packages: true
+      - name: Install CppCheck
+        run: sudo apt-get install cppcheck
+      - name: Run CppCheck
+        run: cppcheck -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
+      # Build the project and create the package
+      - name: Install Conan profiles
+        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
+      - name: Install dependencies
+        run: conan install . --build=missing --profile:all=Linux-${{ matrix.arch }}-gcc-14-gtest
+      - name: CMake presets
+        run: cmake --preset conan-release
+      - name: CMake build
+        run: cmake --build --preset conan-release
+      - name: Run unit tests
+        run: artifacts/Release/${{ matrix.arch }}/bin/action_test
 
 
 #  # Build the Linux x86_64 distribution
