@@ -24,7 +24,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Setup additional project requireoments
+      # Setup additional project requirements
       - name: Install and setup Conan
         uses: conan-io/setup-conan@v1
         with: 
@@ -32,6 +32,11 @@ jobs:
           cache_packages: true
       - name: Install Doxygen
         uses: ssciwr/doxygen-install@v1
+      - name: Install TeX Live
+      - run: |
+          sudo apt-get install texlive-latex-base
+          sudo apt-get install texlive-latex-extra
+          sudo apt-get install texlive-font-utils
       - name: Install CppCheck
         run: sudo apt-get install cppcheck
 
@@ -60,7 +65,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Setup additional project requireoments
+      # Setup additional project requirements
       - name: Install and setup Conan
         uses: conan-io/setup-conan@v1
         with: 
@@ -68,6 +73,11 @@ jobs:
           cache_packages: true
       - name: Install Doxygen
         uses: ssciwr/doxygen-install@v1
+      - name: Install TeX Live
+      - run: |
+          sudo apt-get install texlive-latex-base
+          sudo apt-get install texlive-latex-extra
+          sudo apt-get install texlive-font-utils
       - name: Install CppCheck
         run: sudo apt-get install cppcheck
 
@@ -85,42 +95,42 @@ jobs:
       - name: Build package
         run: cmake --build --preset conan-release --target=package
 
-  # Build the Windows x86_64 distribution
-  windows_x86_64_build:
-    # The type of runner that the job will run on
-    runs-on: windows-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # Setup additional project requireoments
-      - name: Install and setup Conan
-        uses: conan-io/setup-conan@v1
-        with:
-          config_urls: https://github.com/nbeddows/action-test.git
-          cache_packages: true
-      - name: Install Doxygen
-        uses: ssciwr/doxygen-install@v1
-      - name: Install Cppcheck
-        shell: bash
-        run: |
-          curl -OkLSs https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi
-          msiexec -i cppcheck-2.17.1-x64-Setup.msi /qn /norestart
-          rm cppcheck-2.17.1-x64-Setup.msi
-
-      # Build the project and create the package
-      - name: Install Conan profiles
-        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
-      - name: Install dependencies
-        run: conan install . --build=missing --profile:all=Windows-x86_64-msvc-193-gtest
-      - name: CMake presets
-        run: cmake --preset conan-default
-      - name: CMake build
-        run: cmake --build --preset conan-release
-      - name: Run unit tests
-        run: artifacts/Release/x86_64/bin/action_test
-      - name: Build package
-        run: cmake --build --preset conan-release --target=package
+#  # Build the Windows x86_64 distribution
+#  windows_x86_64_build:
+#    # The type of runner that the job will run on
+#    runs-on: windows-latest
+#
+#    # Steps represent a sequence of tasks that will be executed as part of the job
+#    steps:
+#      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      # Setup additional project requirements
+#      - name: Install and setup Conan
+#        uses: conan-io/setup-conan@v1
+#        with:
+#          config_urls: https://github.com/nbeddows/action-test.git
+#          cache_packages: true
+#      - name: Install Doxygen
+#        uses: ssciwr/doxygen-install@v1
+# #      - name: Install Cppcheck
+# #        shell: bash
+# #        run: |
+# #          curl -OkLSs https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi
+# #          msiexec -i cppcheck-2.17.1-x64-Setup.msi /qn /norestart
+# #          rm cppcheck-2.17.1-x64-Setup.msi
+#
+#      # Build the project and create the package
+#      - name: Install Conan profiles
+#        run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
+#      - name: Install dependencies
+#        run: conan install . --build=missing --profile:all=Windows-x86_64-msvc-193-gtest
+#      - name: CMake presets
+#        run: cmake --preset conan-default
+#      - name: CMake build
+#        run: cmake --build --preset conan-release
+#      - name: Run unit tests
+#        run: artifacts/Release/x86_64/bin/action_test
+#      - name: Build package
+#        run: cmake --build --preset conan-release --target=package
