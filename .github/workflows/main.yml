@@ -47,9 +47,10 @@ jobs:
         with: 
           config_urls: https://github.com/nbeddows/action-test.git
           cache_packages: true
-      - name: Install CppCheck
+      - name: Linux Install CppCheck
         if: runner.os == 'Linux'
         run: sudo apt-get install cppcheck
+      - name: Windows Install CppCheck 
         if: runner.os == 'Windows'
         run: choco install cppcheck
       - name: Run CppCheck
