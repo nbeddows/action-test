@@ -1,4 +1,4 @@
-name: Package Artifacts
+name: Upload Package
 
 # Controls when the workflow will run
 on:
