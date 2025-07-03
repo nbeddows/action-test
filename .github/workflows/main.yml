@@ -52,9 +52,10 @@ jobs:
         run: sudo apt-get install cppcheck
       - name: Windows Install CppCheck 
         if: runner.os == 'Windows'
-        run: choco install cppcheck
+        run: |
+          choco install cppcheck
+          refreshenv
       - name: Run CppCheck
-        shell: bash
         run: cppcheck -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
       # Build the project and run the unit tests
       - name: Install Conan profiles
