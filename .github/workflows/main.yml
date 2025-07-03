@@ -55,7 +55,7 @@ jobs:
           cache_packages: true
       - name: Linux Install Cppcheck
         if: runner.os == 'Linux'
-        run: apt-get install cppcheck
+        run: sudo apt-get install cppcheck
       - name: Windows Install Cppcheck 
         if: runner.os == 'Windows'
         run: choco install cppcheck
