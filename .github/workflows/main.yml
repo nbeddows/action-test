@@ -59,7 +59,7 @@ jobs:
           Set-ExecutionPolicy Bypass -Force
           Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
           refreshenv
-          'C:/Program Files/Cppcheck/cppcheck' -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
+          C:/Program` Files/Cppcheck/cppcheck -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
 
 #      - name: Run Linux CppCheck
 #        run: cppcheck -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
