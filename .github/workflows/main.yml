@@ -54,6 +54,8 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           choco install cppcheck
+          Set-ExecutionPolicy Bypass -Force
+          Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
           refreshenv
       - name: Run CppCheck
         run: cppcheck -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
