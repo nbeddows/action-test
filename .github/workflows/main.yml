@@ -44,7 +44,7 @@ jobs:
             version: 193
 
     # Exclude uploading the Windows package as it is not currently supported
-    if: !(github.event_name == 'release' && runner.os == 'Windows')
+    if: (github.event_name == 'release' && runner.os == 'Windows') == false
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
 
