@@ -59,12 +59,20 @@ jobs:
           config_urls: https://github.com/nbeddows/action-test.git
           cache_packages: true
       - name: Install Cppcheck
+        if: github.event_name == 'push' # this needs to be 'pull_request'
         run: ${{ matrix.pm }} install cppcheck
       - name: Run Cppcheck
+        if: github.event_name == 'push' # this needs to be 'pull_request'
         run: ${{ matrix.cppcheck }} --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/ tests/action_test/source
-
-      - name: Event Name
-        run: echo EVENT NAME - ${{ github.event_name }}
+      - name: Install Doxygen
+        if: github.event_name == 'release'
+        uses: ssciwr/doxygen-install@v1
+      - name: Install TeX Live
+        if: github.event_name == 'release'        
+        run: |
+          sudo apt-get install texlive-latex-base
+          sudo apt-get install texlive-latex-extra
+          sudo apt-get install texlive-font-utils
 
       # Build the project and run the unit tests
       - name: Install Conan profiles
@@ -76,4 +84,17 @@ jobs:
       - name: CMake build
         run: cmake --build --preset conan-release
       - name: Run unit tests
+        if: github.event_name == 'push' # this needs to be 'pull_request'
         run: artifacts/Release/${{ matrix.arch }}/bin/action_test
+      
+      # Upload the package
+      - name: Build package
+        if: github.event_name == 'release'
+        run: cmake --build --preset conan-release --target=package
+      - name: Upload artifacts
+        if: github.event_name == 'release'
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: 'build/Release/action-*.tar.gz'
