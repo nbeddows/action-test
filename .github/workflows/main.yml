@@ -43,6 +43,8 @@ jobs:
             preset: default
             version: 193
 
+    # Exclude uploading the Windows package as it is not currently supported
+    if: !(github.event_name == 'release' && runner.os == 'Windows')
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
 
@@ -68,7 +70,7 @@ jobs:
         if: github.event_name == 'release'
         uses: ssciwr/doxygen-install@v1
       - name: Install TeX Live
-        if: github.event_name == 'release' && runner.os == 'Linux'        
+        if: github.event_name == 'release'
         run: |
           sudo apt-get install texlive-latex-base
           sudo apt-get install texlive-latex-extra
