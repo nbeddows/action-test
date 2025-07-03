@@ -68,7 +68,7 @@ jobs:
         if: github.event_name == 'release'
         uses: ssciwr/doxygen-install@v1
       - name: Install TeX Live
-        if: github.event_name == 'release'        
+        if: github.event_name == 'release' && runner.os == 'Linux'        
         run: |
           sudo apt-get install texlive-latex-base
           sudo apt-get install texlive-latex-extra
