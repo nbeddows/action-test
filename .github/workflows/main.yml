@@ -99,7 +99,7 @@ jobs:
       # Create the release
       - name: Create release
         if: github.ref_type == 'tag' 
-        uses: softprops/action-gh-release
+        uses: softprops/action-gh-release@v2
         with:
           body_path: ReleaseNotes.md
           files: ${{ matrix.package_dir }}/action-*.tar.gz
