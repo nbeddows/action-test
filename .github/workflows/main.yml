@@ -43,9 +43,6 @@ jobs:
             preset: default
             version: 193
 
-    # Exclude uploading the Windows package as it is not currently supported
-    if: ${{ !(github.event_name == 'release' && ${{ matrix.os }} == 'windows-latest') }}
-
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
 
@@ -71,7 +68,8 @@ jobs:
         if: github.event_name == 'release'
         uses: ssciwr/doxygen-install@v1
       - name: Install TeX Live
-        if: github.event_name == 'release'
+        # Not building the documentation on Windows (needs to be fixed)
+        if: github.event_name == 'release' && runner.os == 'Linux'
         run: |
           sudo apt-get install texlive-latex-base
           sudo apt-get install texlive-latex-extra
@@ -95,7 +93,8 @@ jobs:
         if: github.event_name == 'release'
         run: cmake --build --preset conan-release --target=package
       - name: Upload artifacts
-        if: github.event_name == 'release'
+        # Not uploading the artifacts on Windows (not supported)
+        if: github.event_name == 'release' && runner.os == 'Linux'
         uses: skx/github-action-publish-binaries@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
