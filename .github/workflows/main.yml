@@ -69,7 +69,7 @@ jobs:
 #          Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
 #          refreshenv
       - name: Run Cppcheck
-        run: ${{ cppcheck }} -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
+        run: ${{ matrix.cppcheck }} -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
       # Build the project and run the unit tests
       - name: Install Conan profiles
         run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
