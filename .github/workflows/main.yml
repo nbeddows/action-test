@@ -50,14 +50,15 @@ jobs:
       - name: Install CppCheck
         if: runner.os == 'Linux'
         run: sudo apt-get install cppcheck
+        if: runner.os == 'Windows'
+        run: choco install cppcheck
       - name: Run CppCheck
-        if: runner.os == 'Linux'
         run: cppcheck -ibuild -i_CPack_Packages -itests --inline-suppr --enable=warning,style,performance,portability,unusedFunction --std=c++20 source/
       # Build the project and run the unit tests
       - name: Install Conan profiles
         run: conan config install -sf profiles -tf profiles https://github.com/nbeddows/meen-conan-config.git --args "--branch v0.2.0"
       - name: Install dependencies
-        run: conan install . --build=missing --profile:all=Linux-${{ matrix.arch }}-${{ matrix.compiler }}-${{ matrix.version }}-gtest
+        run: conan install . --build=missing --profile:all=${{ runner.os }}-${{ matrix.arch }}-${{ matrix.compiler }}-${{ matrix.version }}-gtest
       - name: CMake presets
         run: cmake --preset conan-release
       - name: CMake build
